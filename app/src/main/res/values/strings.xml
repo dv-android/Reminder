@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Reminder</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dshbrd_top">Hello blank fragment</string>
+
+    <string-array name="birthday">
+        <item>January</item>
+        <item>February</item>
+    </string-array>
+
+    <string-array name="reminders">
+        <item>Task1</item>
+        <item>Task2</item>
+        <item>Task3</item>
+        <item>Task4</item>
+    </string-array>
+
+    <string-array name="titles">
+        <item>Dashboard</item>
+        <item>Birhdays</item>
+        <item>Reminder</item>
+        <item>To-Do</item>
+    </string-array>
+
+    <string-array name="addItems">
+        <item>Reminder</item>
+        <item>To-Do-List</item>
+        <item>Birhdays</item>
+    </string-array>
+
+
+    <string-array name="todo">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>To call Boss</item>
+        <item>To manage task</item>
+    </string-array>
+
+
+
+</resources>

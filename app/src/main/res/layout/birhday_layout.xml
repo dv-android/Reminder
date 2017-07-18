@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    >
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:maxHeight="40dp"
+        android:id="@+id/first_name"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:textSize="20sp"
+        android:inputType="text"
+        android:hint="Enter First Name"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:maxHeight="40dp"
+        android:id="@+id/last_name"
+        android:layout_marginTop="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:textSize="20sp"
+        android:inputType="text"
+        android:hint="Enter Last Name"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select  Date"
+        android:id="@+id/btn_date"
+        android:layout_marginTop="110dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        />
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:maxHeight="40dp"
+        android:id="@+id/in_date"
+        android:layout_alignBottom="@+id/btn_date"
+        android:layout_marginLeft="10dp"
+
+        android:layout_toRightOf="@+id/btn_date"
+        android:layout_toEndOf="@+id/btn_date"
+        android:hint="00 : 00 : 00"
+        />
+
+
+    <Button
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="CANCEL"
+        android:id="@+id/cancel"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/btn_date"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        />
+    <Button
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/save"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/btn_date"
+        android:layout_toRightOf="@+id/cancel"
+
+        />
+
+</RelativeLayout>
