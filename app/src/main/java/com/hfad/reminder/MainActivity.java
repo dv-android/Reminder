@@ -192,6 +192,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                ft.commit();
 
+               alertDialog.hide();
+
 
         }
         else if(v==btnCancel){
