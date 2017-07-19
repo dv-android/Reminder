@@ -15,12 +15,22 @@ import java.util.ArrayList;
 public class BirthdayFragment extends ListFragment {
 
     private ArrayList<BdayListItem> bdayItmArryList = new ArrayList<>();
+
+    private DBDataSource dbDataSource;
     public BirthdayFragment() {
         // Required empty public constructor
 
+        /**
         bdayItmArryList.add(new BdayListItem(R.mipmap.ic_launcher,"Devang","Bhatt",123145621));
         bdayItmArryList.add(new BdayListItem(R.mipmap.ic_launcher,"Suresh","Bhatt",123145621));
-        bdayItmArryList.add(new BdayListItem(R.mipmap.ic_launcher,"Hemlata","Bhatt",123145621));
+        bdayItmArryList.add(new BdayListItem(R.mipmap.ic_launcher,"Hemlata","Bhatt",123145621)); */
+    }
+
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        dbDataSource = new DBDataSource(getActivity());
+        dbDataSource.open();
+        bdayItmArryList = dbDataSource.getAllBdayRows();
     }
 
 
@@ -36,5 +46,7 @@ public class BirthdayFragment extends ListFragment {
 
         return super.onCreateView(inflater,container,savedInstanceState);
     }
+
+
 
 }

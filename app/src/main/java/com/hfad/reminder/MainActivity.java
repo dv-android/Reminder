@@ -52,6 +52,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private EditText fName , lName;
     private AlertDialog alertDialog;
     private ArrayList<ReminderItem> itemArrayList = new ArrayList<>();
+    private Fragment fragment;
+
 
     class DrawerItemClickListenr implements ListView.OnItemClickListener{
         public void onItemClick(AdapterView<?> parent,View view,int position,long id){
@@ -62,7 +64,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
     };
 
     private void selectItem(int position){
-        Fragment fragment;
 
         switch(position){
             case 0:
@@ -70,6 +71,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 break;
             case 1:
                 fragment = new BirthdayFragment();
+                loadFragment(fragment);
                 break;
             case 2:
                 fragment = new ReminderFragment();
@@ -81,13 +83,17 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 fragment = new DashBoardFragment();
         }
 
-        FragmentTransaction ft =  getFragmentManager().beginTransaction();
+        FragmentTransaction     ft =  getFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame,fragment);
-        ft.addToBackStack(null);
+
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
 
         drawerLayout.closeDrawer(drawerList);
+    }
+
+    public void loadFragment(Fragment fragment){
+
     }
 
     private void setActionBarTitle(int position){
@@ -178,6 +184,15 @@ public class MainActivity extends Activity implements View.OnClickListener{
                Log.d("Main Activity","Entered DOB"+entered_dt_ts);
              //  Log.d("Main Activity","First Name Last Name"+firstName+lastName);
                ReminderDatabaseHelper.insertBdayDetails(db,firstName,lastName,entered_dt_ts);
+
+               Fragment fragment = new BirthdayFragment();
+               FragmentTransaction     ft =  getFragmentManager().beginTransaction();
+               ft.replace(R.id.content_frame,fragment);
+
+               ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+               ft.commit();
+
+
         }
         else if(v==btnCancel){
 
