@@ -9,7 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -51,7 +54,11 @@ public class customBdayArryAdapter extends ArrayAdapter<BdayListItem> {
         listBdayName.setText(fullName);
 
         long bDate = item.getBdayDate();
-        listBdayDate.setText(String.valueOf(bDate));
+        DateFormat formattter = new SimpleDateFormat("dd/MM/yyyy");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(bDate);
+        formattter.format(calendar.getTime());
+        listBdayDate.setText(formattter.format(calendar.getTime()));
 
         //get the image associated with this property
         int imageID = item.getIcon();
