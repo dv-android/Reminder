@@ -16,16 +16,16 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by DEVANG on 7/18/2017.
+ * Created by DEVANG on 7/21/2017.
  */
 
-public class customBdayArryAdapter extends ArrayAdapter<BdayListItem> {
+public class customRmndArryAdapter extends ArrayAdapter<RmndListItem>{
 
     private Context context;
-    private List<BdayListItem> itemList;
+    private List<RmndListItem> itemList;
 
     //constructor, call on creation
-    public customBdayArryAdapter(Context context, int resource, ArrayList<BdayListItem> itemList) {
+    public customRmndArryAdapter(Context context, int resource, ArrayList<RmndListItem> itemList) {
         super(context, resource, itemList);
 
         this.context = context;
@@ -35,31 +35,32 @@ public class customBdayArryAdapter extends ArrayAdapter<BdayListItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         //get the property we are displaying
-        BdayListItem item = itemList.get(position);
+        RmndListItem item = itemList.get(position);
 
         //get the inflater and inflate the XML layout for each item
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.list_row_bday, null);
+        View view = inflater.inflate(R.layout.list_row_rmnd, null);
 
 
 
-        ImageView image = (ImageView) view.findViewById(R.id.bdayImage);
-        TextView listBdayName = (TextView) view.findViewById(R.id.badyName);
-        TextView listBdayDate = (TextView) view.findViewById(R.id.badyDate);
+        ImageView image = (ImageView) view.findViewById(R.id.rmndImage);
+        TextView listRmndTitle = (TextView) view.findViewById(R.id.rmndTitle);
+        TextView listRmndDate = (TextView) view.findViewById(R.id.rmndDate);
+        TextView listRmndTime = (TextView) view.findViewById(R.id.rmndTime);
 
         //set address and description
-        String fName = item.getFirstName() ;
-        String lName = item.getLastName();
-        String fullName = fName + "  "+ lName;
-        listBdayName.setText(fullName);
+        String title = item.getTitle() ;
+        listRmndTitle.setText(title);
 
-        long bDate = item.getBdayDate();
+        long bDateTime = item.getDateTime();
+
         DateFormat formattter = new SimpleDateFormat("dd/MM/yyyy");
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(bDate);
-        formattter.format(calendar.getTime());
-        listBdayDate.setText(formattter.format(calendar.getTime()));
+        calendar.setTimeInMillis(bDateTime);
+        listRmndDate.setText(formattter.format(calendar.getTime()));
 
+        DateFormat format = new SimpleDateFormat("HH:mm:ss.SS");
+        listRmndTime.setText(format.format(calendar.getTime()));
         //get the image associated with this property
         int imageID = item.getIcon();
         image.setImageResource(imageID);

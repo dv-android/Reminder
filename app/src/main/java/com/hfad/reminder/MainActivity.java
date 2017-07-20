@@ -28,6 +28,8 @@ import android.util.Log;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -44,12 +46,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private Button btnDatePicker, btnTimePicker , btnCancel ,btnOk , btnBdaySave;
     private EditText txtDate, txtTime;
     private int mYear, mMonth, mDay, mHour, mMinute;
-    private Calendar calendar;
-    private long entered_dt_ts;
+    private Calendar calendar  , remindCalender;
+    private long entered_dt_ts , reminder_date_time_inMillis;
     private SQLiteOpenHelper reminderDatabaseHelper;
     private SQLiteDatabase db;
-    private String firstName , lastName;
-    private EditText fName , lName;
+    private String firstName , lastName ,rmndTitle;
+    private EditText fName , lName , txtTitle;
     private AlertDialog alertDialog;
     private ArrayList<ReminderItem> itemArrayList = new ArrayList<>();
     private Fragment fragment;
@@ -71,7 +73,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 break;
             case 1:
                 fragment = new BirthdayFragment();
-                loadFragment(fragment);
                 break;
             case 2:
                 fragment = new ReminderFragment();
@@ -92,9 +93,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
         drawerLayout.closeDrawer(drawerList);
     }
 
-    public void loadFragment(Fragment fragment){
-
-    }
 
     private void setActionBarTitle(int position){
         String title;
@@ -149,6 +147,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                             txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                             calendar = new GregorianCalendar(year,monthOfYear,dayOfMonth);
                             entered_dt_ts = calendar.getTimeInMillis();
+                            remindCalender = new GregorianCalendar(year,monthOfYear,dayOfMonth);
                             Log.d("MainActivity","Time in seconds "+entered_dt_ts);
                                                     }
                     }, mYear, mMonth, mDay);
@@ -170,6 +169,17 @@ public class MainActivity extends Activity implements View.OnClickListener{
                                               int minute) {
 
                             txtTime.setText(hourOfDay + ":" + minute);
+                            remindCalender.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            remindCalender.set(Calendar.MINUTE, minute);
+                            reminder_date_time_inMillis = remindCalender.getTimeInMillis();
+
+                            DateFormat formattter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SS");
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTimeInMillis(reminder_date_time_inMillis);
+                            formattter.format(calendar.getTime());
+
+                            Log.d("Remind calendr value ","dt time-"+reminder_date_time_inMillis);
+                            Log.d("Remind calendr value","format"+formattter.format(calendar.getTime()));
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();
@@ -192,6 +202,28 @@ public class MainActivity extends Activity implements View.OnClickListener{
                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                ft.commit();
 
+               alertDialog.hide();
+
+
+        }
+        else if(v==btnOk){
+
+            reminderDatabaseHelper = new ReminderDatabaseHelper(this);
+            db = reminderDatabaseHelper.getWritableDatabase();
+            Log.d("Main Activity","Entered DOB"+entered_dt_ts);
+            //  Log.d("Main Activity","First Name Last Name"+firstName+lastName);
+
+            rmndTitle= txtTitle.getText().toString();
+            ReminderDatabaseHelper.insertRemindDetails(db,rmndTitle,reminder_date_time_inMillis);
+
+            Fragment fragment = new ReminderFragment();
+            FragmentTransaction     ft =  getFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame,fragment);
+
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
+
+            alertDialog.hide();
 
         }
         else if(v==btnCancel){
@@ -295,20 +327,19 @@ public class MainActivity extends Activity implements View.OnClickListener{
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Remider Details");
 
-
-
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.date_time_picker, null);
-
         builder.setView(dialogView);
-        //builder.show();
 
-        final AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
         alertDialog.show();
+
+
         btnDatePicker=(Button)  dialogView.findViewById(R.id.btn_date);
         btnTimePicker=(Button)  dialogView.findViewById(R.id.btn_time);
         btnCancel = (Button)  dialogView.findViewById(R.id.cancel);
         btnOk = (Button)  dialogView.findViewById(R.id.ok);
+        txtTitle=(EditText)  dialogView.findViewById(R.id.reminder_title);
         txtDate=(EditText)  dialogView.findViewById(R.id.in_date);
         txtTime=(EditText)  dialogView.findViewById(R.id.in_time);
 

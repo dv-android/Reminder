@@ -8,12 +8,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import java.util.ArrayList;
+
 
 public class ReminderFragment extends ListFragment {
 
+    private ArrayList<RmndListItem> rmndItmArryList = new ArrayList<>();
+
+    private DBDataSource dbDataSource;
 
     public ReminderFragment() {
         // Required empty public constructor
+    }
+
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        dbDataSource = new DBDataSource(getActivity());
+        dbDataSource.open();
+        rmndItmArryList = dbDataSource.getAllRmndRows();
     }
 
 
@@ -22,10 +34,10 @@ public class ReminderFragment extends ListFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+        ArrayAdapter<RmndListItem> adapter = new customRmndArryAdapter(
                 inflater.getContext(),
-                android.R.layout.simple_expandable_list_item_1,
-                getResources().getStringArray(R.array.reminders)
+                0,
+                rmndItmArryList
         );
 
         setListAdapter(adapter);
