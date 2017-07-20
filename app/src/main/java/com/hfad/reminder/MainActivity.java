@@ -28,6 +28,8 @@ import android.util.Log;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -44,8 +46,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private Button btnDatePicker, btnTimePicker , btnCancel ,btnOk , btnBdaySave;
     private EditText txtDate, txtTime;
     private int mYear, mMonth, mDay, mHour, mMinute;
-    private Calendar calendar;
-    private long entered_dt_ts;
+    private Calendar calendar  , remindCalender;
+    private long entered_dt_ts , reminder_date_time_inMillis;
     private SQLiteOpenHelper reminderDatabaseHelper;
     private SQLiteDatabase db;
     private String firstName , lastName;
@@ -149,6 +151,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                             txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                             calendar = new GregorianCalendar(year,monthOfYear,dayOfMonth);
                             entered_dt_ts = calendar.getTimeInMillis();
+                            remindCalender = new GregorianCalendar(year,monthOfYear,dayOfMonth);
                             Log.d("MainActivity","Time in seconds "+entered_dt_ts);
                                                     }
                     }, mYear, mMonth, mDay);
@@ -170,6 +173,17 @@ public class MainActivity extends Activity implements View.OnClickListener{
                                               int minute) {
 
                             txtTime.setText(hourOfDay + ":" + minute);
+                            remindCalender.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            remindCalender.set(Calendar.MINUTE, minute);
+                            reminder_date_time_inMillis = remindCalender.getTimeInMillis();
+
+                            DateFormat formattter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SS");
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTimeInMillis(reminder_date_time_inMillis);
+                            formattter.format(calendar.getTime());
+
+                            Log.d("Remind calendr value ","dt time-"+reminder_date_time_inMillis);
+                            Log.d("Remind calendr value","format"+formattter.format(calendar.getTime()));
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();
