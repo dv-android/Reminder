@@ -17,8 +17,11 @@ public class DBDataSource {
 
     private ReminderDatabaseHelper dbHelper;
     private ArrayList<BdayListItem> bdayListItems = new ArrayList<BdayListItem>();
+    private ArrayList<RmndListItem> rmndListItems = new ArrayList<RmndListItem>();
 
     private String[] allColumns = {"FIRST_NAME","LAST_NAME","DATE_TIME"};
+
+    private String[] allRmndColumns = {"TITLE TEXT","DATE_TIME"};
 
     public DBDataSource(Context context)
     {
@@ -33,10 +36,10 @@ public class DBDataSource {
         dbHelper.close();
     }
 
-    public BdayListItem cursorToBdayListItem(Cursor cursor){
-        BdayListItem bd = new BdayListItem(R.mipmap.ic_launcher,cursor.getString(0),cursor.getString(1),cursor.getLong(2));
-        return bd;
-    }
+        public BdayListItem cursorToBdayListItem(Cursor cursor){
+            BdayListItem bd = new BdayListItem(R.mipmap.ic_launcher,cursor.getString(0),cursor.getString(1),cursor.getLong(2));
+            return bd;
+        }
 
 
         public ArrayList<BdayListItem> getAllBdayRows(){
@@ -54,5 +57,29 @@ public class DBDataSource {
             cursor.close();
 
             return  bdayListItems;
-    }
+         }
+
+        public RmndListItem cursorToReminderListItem(Cursor cursor){
+            RmndListItem rt = new RmndListItem(R.mipmap.ic_launcher,cursor.getString(0),cursor.getLong(1));
+            return rt;
+        }
+
+
+        public ArrayList<RmndListItem> getAllRmndRows(){
+
+            Cursor cursor = database.query(ReminderDatabaseHelper.TABLE_REMINDER,
+                    allRmndColumns, null, null, null, null, null);
+
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                RmndListItem rt = cursorToReminderListItem(cursor);
+                rmndListItems.add(rt);
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+            return  rmndListItems;
+        }
+
 }

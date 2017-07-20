@@ -50,8 +50,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private long entered_dt_ts , reminder_date_time_inMillis;
     private SQLiteOpenHelper reminderDatabaseHelper;
     private SQLiteDatabase db;
-    private String firstName , lastName;
-    private EditText fName , lName;
+    private String firstName , lastName ,rmndTitle;
+    private EditText fName , lName , txtTitle;
     private AlertDialog alertDialog;
     private ArrayList<ReminderItem> itemArrayList = new ArrayList<>();
     private Fragment fragment;
@@ -73,7 +73,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 break;
             case 1:
                 fragment = new BirthdayFragment();
-                loadFragment(fragment);
                 break;
             case 2:
                 fragment = new ReminderFragment();
@@ -94,9 +93,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
         drawerLayout.closeDrawer(drawerList);
     }
 
-    public void loadFragment(Fragment fragment){
-
-    }
 
     private void setActionBarTitle(int position){
         String title;
@@ -210,6 +206,26 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
 
         }
+        else if(v==btnOk){
+
+            reminderDatabaseHelper = new ReminderDatabaseHelper(this);
+            db = reminderDatabaseHelper.getWritableDatabase();
+            Log.d("Main Activity","Entered DOB"+entered_dt_ts);
+            //  Log.d("Main Activity","First Name Last Name"+firstName+lastName);
+
+            rmndTitle= txtTitle.getText().toString();
+            ReminderDatabaseHelper.insertRemindDetails(db,rmndTitle,reminder_date_time_inMillis);
+
+            Fragment fragment = new ReminderFragment();
+            FragmentTransaction     ft =  getFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame,fragment);
+
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
+
+            alertDialog.hide();
+
+        }
         else if(v==btnCancel){
 
         }
@@ -311,20 +327,19 @@ public class MainActivity extends Activity implements View.OnClickListener{
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Remider Details");
 
-
-
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.date_time_picker, null);
-
         builder.setView(dialogView);
-        //builder.show();
 
-        final AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
         alertDialog.show();
+
+
         btnDatePicker=(Button)  dialogView.findViewById(R.id.btn_date);
         btnTimePicker=(Button)  dialogView.findViewById(R.id.btn_time);
         btnCancel = (Button)  dialogView.findViewById(R.id.cancel);
         btnOk = (Button)  dialogView.findViewById(R.id.ok);
+        txtTitle=(EditText)  dialogView.findViewById(R.id.reminder_title);
         txtDate=(EditText)  dialogView.findViewById(R.id.in_date);
         txtTime=(EditText)  dialogView.findViewById(R.id.in_time);
 
