@@ -19,7 +19,7 @@ public class DBDataSource {
     private ArrayList<BdayListItem> bdayListItems = new ArrayList<BdayListItem>();
     private ArrayList<RmndListItem> rmndListItems = new ArrayList<RmndListItem>();
 
-    private String[] allColumns = {"FIRST_NAME","LAST_NAME","DATE_TIME"};
+    private String[] allColumns = {"FIRST_NAME","LAST_NAME","DATE"};
 
     private String[] allRmndColumns = {"TITLE TEXT","DATE_TIME"};
 
