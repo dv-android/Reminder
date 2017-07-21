@@ -195,13 +195,14 @@ public class MainActivity extends Activity implements View.OnClickListener{
              //  Log.d("Main Activity","First Name Last Name"+firstName+lastName);
                ReminderDatabaseHelper.insertBdayDetails(db,firstName,lastName,entered_dt_ts);
 
-               Fragment fragment = new BirthdayFragment();
-               FragmentTransaction     ft =  getFragmentManager().beginTransaction();
-               ft.replace(R.id.content_frame,fragment);
 
-               ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-               ft.commit();
-
+               setActionBarTitle(1);
+               drawerList.setItemChecked(1,true);
+               drawerList.setSelection(1);
+               drawerList.performItemClick(
+                    drawerList.getAdapter().getView(1, null, null),
+                    1,
+                    drawerList.getAdapter().getItemId(1));
                alertDialog.hide();
 
 
@@ -216,12 +217,14 @@ public class MainActivity extends Activity implements View.OnClickListener{
             rmndTitle= txtTitle.getText().toString();
             ReminderDatabaseHelper.insertRemindDetails(db,rmndTitle,reminder_date_time_inMillis);
 
-            Fragment fragment = new ReminderFragment();
-            FragmentTransaction     ft =  getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame,fragment);
+            setActionBarTitle(2);
 
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.commit();
+            drawerList.setItemChecked(2,true);
+            drawerList.setSelection(2);
+            drawerList.performItemClick(
+                    drawerList.getAdapter().getView(2, null, null),
+                    2,
+                    drawerList.getAdapter().getItemId(2));
 
             alertDialog.hide();
 
