@@ -1,10 +1,13 @@
 package com.hfad.reminder;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -124,7 +127,26 @@ public class MainActivity extends Activity implements View.OnClickListener{
         itemArrayList.add(new ReminderItem("Birthday",R.mipmap.ic_launcher));
 
 
+        Bundle extras = getIntent().getExtras();
+
+        if(extras != null){
+            Boolean openFrmRmndNtfn = extras.getBoolean("openFrmRmndNtfn");
+
+            if(openFrmRmndNtfn==true){
+                drawerList.setItemChecked(2,true);
+                drawerList.setSelection(2);
+                drawerList.performItemClick(
+                        drawerList.getAdapter().getView(2, null, null),
+                        2,
+                        drawerList.getAdapter().getItemId(2));
+            }
+
+        }
+
+
+
     }
+
 
     public void onClick(View v)throws SQLiteException{
         Log.d("btnBdaySave","Value is"+(btnBdaySave==null));
@@ -226,7 +248,15 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     2,
                     drawerList.getAdapter().getItemId(2));
 
+            Intent intent = new Intent(this, AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                    this.getApplicationContext(), 234324243, intent, 0);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, reminder_date_time_inMillis, pendingIntent);
+
             alertDialog.hide();
+
+
 
         }
         else if(v==btnCancel){
