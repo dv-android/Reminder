@@ -35,6 +35,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static com.hfad.reminder.R.mipmap.ic_launcher_round;
@@ -145,6 +146,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
 
 
+
     }
 
 
@@ -248,11 +250,35 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     2,
                     drawerList.getAdapter().getItemId(2));
 
-            Intent intent = new Intent(this, AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                    this.getApplicationContext(), 234324243, intent, 0);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, reminder_date_time_inMillis, pendingIntent);
+
+            Date date = new Date(reminder_date_time_inMillis);
+            Calendar cal=GregorianCalendar.getInstance();
+            cal.setTime(date);
+            cal.add(Calendar.SECOND,-20);
+            long notificationTime = cal.getTimeInMillis();
+
+
+
+            long timeStamp;
+
+            for (int id=0;id<2;id++){
+                Intent intent = new Intent(this, AlarmReceiver.class);
+                intent.putExtra("requesteCode",id);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        this.getApplicationContext(), id, intent, 0);
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+
+                timeStamp = (id==0)? notificationTime:reminder_date_time_inMillis;
+                Log.d("Alarm Manager ","TIme is"+timeStamp);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,timeStamp , pendingIntent);   // start from API 19 always use setExact instead od set() mthd
+            }
+
+
+
+
+
 
             alertDialog.hide();
 
@@ -263,6 +289,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         }
         Log.d("Main Activity","Button clicked");
+    }
+
+    public void setAlarm(long millisecs){
+
     }
 
 
@@ -318,6 +348,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 })
                 .setTitle("What you would like to ADD ?");
         builder.show();
+
 
     }
 
