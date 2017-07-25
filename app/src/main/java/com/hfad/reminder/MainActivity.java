@@ -152,6 +152,17 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         }
 
+        SharedPreferences prefs = getSharedPreferences("toDoitms",MODE_PRIVATE);;
+        int  size = prefs.getInt("size", 0);
+         if(size!=0)
+         {
+             ArrayList<String> list = new ArrayList<String>();
+
+             for (int i=0;i<size;i++){
+                 list.add(prefs.getString("value"+i,null));
+             }
+             toDOItems = new ArrayList<String>(list);
+         }
 
 
 
@@ -443,12 +454,14 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
                 toDOItems.add(input.getText().toString());
 
-                prefs = getBaseContext().getSharedPreferences("todoPrefsKey",getApplicationContext().MODE_PRIVATE);
+                prefs =  getBaseContext().getSharedPreferences("toDoitms",MODE_PRIVATE);
                 edit = prefs.edit();
-                for(int i=0;i<toDOItems.size();i++){
+
+                for( int i=0;i<toDOItems.size();i++){
                     edit.putString("value"+i,toDOItems.get(i));
                 }
                 edit.putInt("size",toDOItems.size());
+
                 edit.commit();
 
                 drawerList.setItemChecked(3,true);

@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static android.content.Context.MODE_PRIVATE;
+import static android.content.Context.MODE_WORLD_READABLE;
+
 
 public class ToDoFragment extends ListFragment {
 
@@ -26,7 +29,7 @@ public class ToDoFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        SharedPreferences prefs = getActivity().getSharedPreferences("todoPrefsKey",getActivity().MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences("toDoitms",MODE_PRIVATE);;
         int  size = prefs.getInt("size", 0);
 
         ArrayList<String> list = new ArrayList<String>();
@@ -40,7 +43,7 @@ public class ToDoFragment extends ListFragment {
                 android.R.layout.simple_expandable_list_item_1,
                 list
         );
-
+        System.out.println("List is from fragment"+list);
         setListAdapter(adapter);
 
         return super.onCreateView(inflater,container,savedInstanceState);
