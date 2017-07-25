@@ -25,6 +25,7 @@ public class ToDoFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         SharedPreferences prefs = getActivity().getSharedPreferences("todoPrefsKey",getActivity().MODE_PRIVATE);
         int  size = prefs.getInt("size", 0);
 

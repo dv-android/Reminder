@@ -265,8 +265,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
             cal.add(Calendar.SECOND,-20);
             long notificationTime = cal.getTimeInMillis();
 
-
-
             long timeStamp;
 
             for (int id=0;id<2;id++){
@@ -284,14 +282,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP,timeStamp , pendingIntent);   // start from API 19 always use setExact instead od set() mthd
             }
 
-
-
-
-
-
             alertDialog.hide();
-
-
 
         }
         else if(v==btnCancel){
@@ -454,13 +445,18 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
                 prefs = getBaseContext().getSharedPreferences("todoPrefsKey",getApplicationContext().MODE_PRIVATE);
                 edit = prefs.edit();
-
                 for(int i=0;i<toDOItems.size();i++){
                     edit.putString("value"+i,toDOItems.get(i));
                 }
-
                 edit.putInt("size",toDOItems.size());
                 edit.commit();
+
+                drawerList.setItemChecked(3,true);
+                drawerList.setSelection(3);
+                drawerList.performItemClick(
+                        drawerList.getAdapter().getView(3, null, null),
+                        3,
+                        drawerList.getAdapter().getItemId(3));
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
