@@ -26,14 +26,15 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // assumes WordService is a registered service
-        //Intent intent = new Intent(context, WordService.class);
-        //context.startService(intent);
+
+
+
        // Toast.makeText(context, "Don't panik but your time is up!!!!.",
         //        Toast.LENGTH_LONG).show();
         Calendar cal = Calendar.getInstance();
          Log.d("Receiver","called");
          Log.d("Receiver timestamp",""+cal.getTimeInMillis());
+
         int requestCode = intent.getExtras().getInt("requesteCode");
 
         if(requestCode==0)

@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -37,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.hfad.reminder.R.mipmap.ic_launcher_round;
 
@@ -59,6 +62,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private AlertDialog alertDialog;
     private ArrayList<ReminderItem> itemArrayList = new ArrayList<>();
     private Fragment fragment;
+    private ArrayList<String> toDOItems =  new ArrayList<String>();
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
+    Set<String> set;
+
 
 
     class DrawerItemClickListenr implements ListView.OnItemClickListener{
@@ -272,6 +280,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
                 timeStamp = (id==0)? notificationTime:reminder_date_time_inMillis;
                 Log.d("Alarm Manager ","TIme is"+timeStamp);
+
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP,timeStamp , pendingIntent);   // start from API 19 always use setExact instead od set() mthd
             }
 
@@ -430,13 +439,28 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         final EditText input = new EditText(this);
 
+
         //input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         builder.setView(input);
+
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
+
             public void onClick(DialogInterface dialog, int which) {
                 toDoItemEntered = input.getText().toString();
                 Log.d("Main Activity", toDoItemEntered);
+
+                toDOItems.add(input.getText().toString());
+
+                prefs = getBaseContext().getSharedPreferences("todoPrefsKey",getApplicationContext().MODE_PRIVATE);
+                edit = prefs.edit();
+
+                for(int i=0;i<toDOItems.size();i++){
+                    edit.putString("value"+i,toDOItems.get(i));
+                }
+
+                edit.putInt("size",toDOItems.size());
+                edit.commit();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
