@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -35,7 +36,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.hfad.reminder.R.mipmap.ic_launcher_round;
 
@@ -58,6 +62,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private AlertDialog alertDialog;
     private ArrayList<ReminderItem> itemArrayList = new ArrayList<>();
     private Fragment fragment;
+    private ArrayList<String> toDOItems =  new ArrayList<String>();
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
+    Set<String> set;
+
 
 
     class DrawerItemClickListenr implements ListView.OnItemClickListener{
@@ -142,6 +151,18 @@ public class MainActivity extends Activity implements View.OnClickListener{
             }
 
         }
+
+        SharedPreferences prefs = getSharedPreferences("toDoitms",MODE_PRIVATE);;
+        int  size = prefs.getInt("size", 0);
+         if(size!=0)
+         {
+             ArrayList<String> list = new ArrayList<String>();
+
+             for (int i=0;i<size;i++){
+                 list.add(prefs.getString("value"+i,null));
+             }
+             toDOItems = new ArrayList<String>(list);
+         }
 
 
 
@@ -248,21 +269,41 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     2,
                     drawerList.getAdapter().getItemId(2));
 
-            Intent intent = new Intent(this, AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                    this.getApplicationContext(), 234324243, intent, 0);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, reminder_date_time_inMillis, pendingIntent);
+
+            Date date = new Date(reminder_date_time_inMillis);
+            Calendar cal=GregorianCalendar.getInstance();
+            cal.setTime(date);
+            cal.add(Calendar.SECOND,-20);
+            long notificationTime = cal.getTimeInMillis();
+
+            long timeStamp;
+
+            for (int id=0;id<2;id++){
+                Intent intent = new Intent(this, AlarmReceiver.class);
+                intent.putExtra("requesteCode",id);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        this.getApplicationContext(), id, intent, 0);
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+
+                timeStamp = (id==0)? notificationTime:reminder_date_time_inMillis;
+                Log.d("Alarm Manager ","TIme is"+timeStamp);
+
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,timeStamp , pendingIntent);   // start from API 19 always use setExact instead od set() mthd
+            }
 
             alertDialog.hide();
-
-
 
         }
         else if(v==btnCancel){
 
         }
         Log.d("Main Activity","Button clicked");
+    }
+
+    public void setAlarm(long millisecs){
+
     }
 
 
@@ -318,6 +359,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 })
                 .setTitle("What you would like to ADD ?");
         builder.show();
+
 
     }
 
@@ -399,13 +441,35 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         final EditText input = new EditText(this);
 
+
         //input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         builder.setView(input);
+
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
+
             public void onClick(DialogInterface dialog, int which) {
                 toDoItemEntered = input.getText().toString();
                 Log.d("Main Activity", toDoItemEntered);
+
+                toDOItems.add(input.getText().toString());
+
+                prefs =  getBaseContext().getSharedPreferences("toDoitms",MODE_PRIVATE);
+                edit = prefs.edit();
+
+                for( int i=0;i<toDOItems.size();i++){
+                    edit.putString("value"+i,toDOItems.get(i));
+                }
+                edit.putInt("size",toDOItems.size());
+
+                edit.commit();
+
+                drawerList.setItemChecked(3,true);
+                drawerList.setSelection(3);
+                drawerList.performItemClick(
+                        drawerList.getAdapter().getView(3, null, null),
+                        3,
+                        drawerList.getAdapter().getItemId(3));
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
