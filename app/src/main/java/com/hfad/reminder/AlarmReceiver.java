@@ -84,7 +84,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             AlertDialog alertDialog = builder.create();
             alertDialog.setView(dialogView);
-            alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
             alertDialog.show();
 
 
